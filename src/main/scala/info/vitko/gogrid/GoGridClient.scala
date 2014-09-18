@@ -15,6 +15,8 @@ class GoGridClient(key: String, secret: String,
                    apiUrl: String = "https://api.gogrid.com/api",
                    version: String = "1.9") {
 
+  def this() = this(GoGridConfig.AccessConfig.key, GoGridConfig.AccessConfig.secret)
+
   def listServers() = {
     this.apiRequest("/grid/server/list")
   }
@@ -37,9 +39,6 @@ class GoGridClient(key: String, secret: String,
 }
 
 object GoGridClient extends App {
-  val secret = "xxxxx"
-  val key = "xxxxx"
-
-  val client = new GoGridClient(key, secret)
+  val client = new GoGridClient()
   println(client.listServers())
 }
