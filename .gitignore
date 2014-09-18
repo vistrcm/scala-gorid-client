@@ -1,4 +1,6 @@
 .idea/
 .idea_modules/
 target/
+# ignore config for tests. reference.conf should be used instead
+src/main/resources/application.conf
 
