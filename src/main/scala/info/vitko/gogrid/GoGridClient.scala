@@ -5,6 +5,8 @@ import java.security.MessageDigest
 import dispatch.Defaults._
 import dispatch._
 
+import scalaz._, Scalaz._
+import argonaut._, Argonaut._
 /**
  * Created with IntelliJ IDEA.
  * User: vist
@@ -17,8 +19,15 @@ class GoGridClient(key: String, secret: String,
 
   def this() = this(GoGridConfig.AccessConfig.key, GoGridConfig.AccessConfig.secret)
 
-  def listServers() = {
-    this.apiRequest("/grid/server/list")
+  def listServers() = apiRequest("/grid/server/list")
+
+  def listJobs() = {
+
+    val respStr = apiRequest("/grid/job/list")
+//    println(respStr)
+    val respJson = respStr.decode[JobsResponse]
+
+    respJson.getOrElse(Some("Something is something"))
   }
 
   private def apiRequest(path: String, format: String = "json") = {
@@ -45,5 +54,6 @@ class GoGridClient(key: String, secret: String,
 
 object GoGridClient extends App {
   val client = new GoGridClient()
-  println(client.listServers())
+//  println(client.listServers())
+  println(client.listJobs())
 }
