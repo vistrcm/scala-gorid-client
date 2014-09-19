@@ -10,7 +10,9 @@ package info.vitko.gogrid
 import scalaz._, Scalaz._
 import argonaut._, Argonaut._
 
-case class JobCommand(description: String, id: Int, name: String, obj: String)
+case class JobCommand(description: String, id: Int, name: String, obj: String)  {
+  override def toString = name
+}
 
 object JobCommand {
   // Define codecs easily from case classes
@@ -32,7 +34,9 @@ object JobDatacenter {
     casecodec4(JobDatacenter.apply, JobDatacenter.unapply)("description", "id", "name", "object")
 }
 
-case class JobDetail(description: Option[String], image: String, ip: String, name: String, detailType: String)
+case class JobDetail(description: Option[String], image: String, ip: String, name: String, detailType: String){
+  override def toString() = s"$ip\t$name"
+}
 
 object JobDetail {
   implicit def JobDetailCodecJson: CodecJson[JobDetail] =
@@ -71,7 +75,10 @@ case class GoGridJob(attempts: Int,
                      lastupdatedon: Option[Int],
                      obj: String,
                      objecttype: JobObjecttype,
-                     owner: String)
+                     owner: String) {
+
+  override def toString = s"$createdon by $owner\t$command\t$detail"
+}
 
 object GoGridJob {
   implicit def GoGridJobCodecJson: CodecJson[GoGridJob] =
