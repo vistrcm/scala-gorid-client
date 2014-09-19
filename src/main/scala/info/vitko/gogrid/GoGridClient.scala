@@ -17,7 +17,8 @@ class GoGridClient(key: String, secret: String,
                    apiUrl: String = "https://api.gogrid.com/api",
                    version: String = "1.9") {
 
-  def this() = this(GoGridConfig.AccessConfig.key, GoGridConfig.AccessConfig.secret)
+  def this() = this(GoGridConfig.AccessConfig.key, GoGridConfig.AccessConfig.secret,
+                    GoGridConfig.apiUrl, GoGridConfig.version)
 
   def listServers() = apiRequest("/grid/server/list")
 

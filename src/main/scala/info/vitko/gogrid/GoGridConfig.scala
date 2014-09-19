@@ -9,7 +9,10 @@ import com.typesafe.config.ConfigFactory
  * Time: 16:25
  */
 object GoGridConfig {
-  private val config =  ConfigFactory.load()
+  private val config = ConfigFactory.load()
+
+  lazy val apiUrl = config.getString("apiUrl")
+  lazy val version = config.getString("version")
 
   object AccessConfig {
     private val accessConfig = config.getConfig("access")
