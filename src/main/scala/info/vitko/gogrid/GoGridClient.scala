@@ -23,12 +23,8 @@ class GoGridClient(key: String, secret: String,
   def listServers() = apiRequest("/grid/server/list")
 
   def listJobs() = {
-
-    val respStr = apiRequest("/grid/job/list")
-//    println(respStr)
-    val respJson = respStr.decode[JobsResponse]
-
-    respJson.getOrElse(Some("Something is something"))
+    val decoded = Parse.decodeOption[JobsResponse](apiRequest("/grid/job/list"))
+    decoded.get.jobs
   }
 
   private def apiRequest(path: String, format: String = "json") = {
@@ -56,5 +52,6 @@ class GoGridClient(key: String, secret: String,
 object GoGridClient extends App {
   val client = new GoGridClient()
 //  println(client.listServers())
-  println(client.listJobs())
+  val jbs = client.listJobs()
+  for (job <- jbs) println(job)
 }
