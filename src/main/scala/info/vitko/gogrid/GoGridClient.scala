@@ -25,8 +25,13 @@ class GoGridClient(key: String, secret: String,
     val requestUrl = s"${this.apiUrl}/grid/server/list"
     val svc = url(requestUrl) <<? Map("api_key" -> key) <<? Map("sig" -> getSig()) <<?
       Map("v" -> version) <<? Map("format" -> format)
-    val resp = Http(svc OK as.String)
-    resp()
+//    println(svc.toRequest)
+    val respF = Http(svc OK as.String)
+
+    // add handler to shutdown NIO engine on complete
+    respF onComplete { case _ => Http.shutdown() }
+
+    respF()
   }
 
   private def getSig() = {
