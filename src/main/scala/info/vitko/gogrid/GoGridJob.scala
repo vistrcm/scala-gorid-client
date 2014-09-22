@@ -1,5 +1,8 @@
 package info.vitko.gogrid
 
+import scalaz._, Scalaz._
+import argonaut._, Argonaut._
+
 /**
  * Created with IntelliJ IDEA.
  * User: vist
@@ -7,31 +10,20 @@ package info.vitko.gogrid
  * Time: 16:01
  */
 
-import scalaz._, Scalaz._
-import argonaut._, Argonaut._
+case class GoGridJob(attempts: Int,
+                     command: GeneralOption,
+                     createdon: Int,
+                     currentstate: GeneralOption,
+                     datacenter: GeneralOption,
+                     detail: JobDetail,
+                     history: List[JobHistoryEntry],
+                     id: Int,
+                     lastupdatedon: Option[Int],
+                     obj: String,
+                     objecttype: GeneralOption,
+                     owner: String) {
 
-case class JobCommand(description: String, id: Int, name: String, obj: String)  {
-  override def toString = name
-}
-
-object JobCommand {
-  // Define codecs easily from case classes
-  implicit def JobCommandCodecJson: CodecJson[JobCommand] =
-    casecodec4(JobCommand.apply, JobCommand.unapply)("description", "id", "name", "object")
-}
-
-case class JobCurrentstate(description: String, id: Int, name: String, obj: String)
-
-object JobCurrentstate {
-  implicit def JobCurrentstateCodecJson: CodecJson[JobCurrentstate] =
-    casecodec4(JobCurrentstate.apply, JobCurrentstate.unapply)("description", "id", "name", "object")
-}
-
-case class JobDatacenter(description: String, id: Int, name: String, obj: String)
-
-object JobDatacenter {
-  implicit def JobDatacenterCodecJson: CodecJson[JobDatacenter] =
-    casecodec4(JobDatacenter.apply, JobDatacenter.unapply)("description", "id", "name", "object")
+  override def toString = s"$createdon by $owner\t$command\t$detail"
 }
 
 case class JobDetail(description: Option[String], image: String, ip: String, name: String, detailType: String){
@@ -43,41 +35,11 @@ object JobDetail {
     casecodec5(JobDetail.apply, JobDetail.unapply)("description", "image", "ip", "name", "type")
 }
 
-case class JobHistoryEntryState(description: String, id: Int, name: String, obj: String)
-
-object JobHistoryEntryState {
-  implicit def JobHistoryEntryStateCodecJson: CodecJson[JobHistoryEntryState] =
-    casecodec4(JobHistoryEntryState.apply, JobHistoryEntryState.unapply)("description", "id", "name", "object")
-}
-
-case class JobHistoryEntry(id: Int, state: JobHistoryEntryState, updatedon: Option[Int])
+case class JobHistoryEntry(id: Int, state: GeneralOption, updatedon: Option[Int])
 
 object JobHistoryEntry {
   implicit def JobHistoryEntryCodecJson: CodecJson[JobHistoryEntry] =
     casecodec3(JobHistoryEntry.apply, JobHistoryEntry.unapply)("id", "state", "updatedon")
-}
-
-case class JobObjecttype(description: Option[String], id: Int, name: String, obj: String)
-
-object JobObjecttype {
-  implicit def JobObjecttypeCodecJson: CodecJson[JobObjecttype] =
-    casecodec4(JobObjecttype.apply, JobObjecttype.unapply)("description", "id", "name", "object")
-}
-
-case class GoGridJob(attempts: Int,
-                     command: JobCommand,
-                     createdon: Int,
-                     currentstate: JobCurrentstate,
-                     datacenter: JobDatacenter,
-                     detail: JobDetail,
-                     history: List[JobHistoryEntry],
-                     id: Int,
-                     lastupdatedon: Option[Int],
-                     obj: String,
-                     objecttype: JobObjecttype,
-                     owner: String) {
-
-  override def toString = s"$createdon by $owner\t$command\t$detail"
 }
 
 object GoGridJob {
