@@ -20,22 +20,22 @@ class GoGridClient(key: String, secret: String,
   def this() = this(GoGridConfig.AccessConfig.key, GoGridConfig.AccessConfig.secret,
                     GoGridConfig.apiUrl, GoGridConfig.version)
 
-  def listServers() = apiRequest("/grid/server/list")
+  def listServers() = apiRequest("grid/server/list")
 
   def listJobs() = {
-    val decoded = Parse.decodeOption[JobsResponse](apiRequest("/grid/job/list"))
+    val decoded = Parse.decodeOption[JobsResponse](apiRequest("grid/job/list"))
     decoded.get.jobs
   }
 
   private def apiRequest(path: String, format: String = "json") = {
-    val requestUrl = s"${this.apiUrl}/grid/server/list"
+    val requestUrl = s"${this.apiUrl}/${path}"
     val svc = url(requestUrl) <<? Map("api_key" -> key) <<? Map("sig" -> getSig()) <<?
       Map("v" -> version) <<? Map("format" -> format)
 //    println(svc.toRequest)
     val respF = Http(svc OK as.String)
 
     // add handler to shutdown NIO engine on complete
-    respF onComplete { case _ => Http.shutdown() }
+//    respF onComplete { case _ => Http.shutdown() }
 
     respF()
   }
@@ -50,8 +50,13 @@ class GoGridClient(key: String, secret: String,
 }
 
 object GoGridClient extends App {
+  // create GoGridClient
   val client = new GoGridClient()
-//  println(client.listServers())
+
+  // list of jobs
   val jbs = client.listJobs()
   for (job <- jbs) println(job)
+
+  // list of servers
+  println(client.listServers())
 }
