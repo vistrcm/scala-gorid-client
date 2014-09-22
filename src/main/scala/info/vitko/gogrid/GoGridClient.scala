@@ -19,7 +19,10 @@ class GoGridClient(key: String, secret: String,
 
   def this() = this(GoGridConfig.AccessConfig.key, GoGridConfig.AccessConfig.secret)
 
-  def listServers() = apiRequest("grid/server/list")
+  def listServers() = {
+    val response = Parse.decodeOption[ServersResponse](apiRequest("grid/server/list"))
+    response.get.servers
+  }
 
   def listJobs() = {
     val decoded = Parse.decodeOption[JobsResponse](apiRequest("grid/job/list"))
@@ -57,5 +60,7 @@ object GoGridClient extends App {
   for (job <- jbs) println(job)
 
   // list of servers
-  println(client.listServers())
+  for (srv <- client.listServers()) println(srv)
+
+  Http.shutdown()
 }
