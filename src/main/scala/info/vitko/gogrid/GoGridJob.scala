@@ -86,14 +86,7 @@ object GoGridJob {
       "datacenter", "detail", "history", "id", "lastupdatedon", "object", "objecttype", "owner")
 }
 
-case class JobsResponseSummary(numpages: Int, start: Int, total: Int, returned: Int)
-
-object JobsResponseSummary {
-  implicit def JobsResponseCodecJson: CodecJson[JobsResponseSummary] =
-  casecodec4(JobsResponseSummary.apply, JobsResponseSummary.unapply)("numpages", "start", "total", "returned")
-}
-
-case class JobsResponse(jobs: List[GoGridJob], method: String, status: String, summary: JobsResponseSummary)
+case class JobsResponse(jobs: List[GoGridJob], method: String, status: String, summary: GoGridResponseSummary)
 
 object JobsResponse {
   implicit def JobsResponseCodecJson: CodecJson[JobsResponse] =
