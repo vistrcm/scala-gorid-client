@@ -27,7 +27,10 @@ case class Image(isActive: Boolean,
                  os: GeneralOption,
                  id: Int,
                  billingtokens: List[BillingToken],
-                 architecture: GeneralOption)
+                 architecture: GeneralOption) {
+
+  override def toString = s"$id\t$name\t$os"
+}
 
 object Image {
   implicit def ImageCodecJson: CodecJson[Image] =
