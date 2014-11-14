@@ -26,13 +26,20 @@ case class GoGridJob(attempts: Int,
   override def toString = s"$createdon by $owner\t$command\t$detail"
 }
 
-case class JobDetail(description: Option[String], image: String, ip: String, name: String, detailType: String){
-  override def toString() = s"$ip\t$name"
+case class JobDetail(
+                      ram: Option[String],
+                      description: Option[String],
+                      name: String,
+                      image: String,
+                      detailType: String,
+                      ip: Option[String]){
+
+  override def toString() = s"${ip.getOrElse(None)}\t$name"
 }
 
 object JobDetail {
   implicit def JobDetailCodecJson: CodecJson[JobDetail] =
-    casecodec5(JobDetail.apply, JobDetail.unapply)("description", "image", "ip", "name", "type")
+    casecodec6(JobDetail.apply, JobDetail.unapply)("ram", "description", "name", "image", "type", "ip")
 }
 
 case class JobHistoryEntry(id: Int, state: GeneralOption, updatedon: Option[Int])
