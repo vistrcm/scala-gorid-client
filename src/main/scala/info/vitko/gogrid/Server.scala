@@ -25,7 +25,7 @@ case class Server(datacenter: GeneralOption,
                   id: Option[Int],
                   name: String) {
 
-  override def toString() = s"${id.getOrElse(None)}\t$name\t$ip"
+  override def toString = s"$id\t$name\t$ip\t($image)"
 }
 
 object Server {
